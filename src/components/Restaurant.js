@@ -7,7 +7,7 @@ function Restaurant(props) {
     <tr>
       <td>{props.restaurant.name}</td> 
       <td>{props.restaurant.cuisine}</td> 
-      <td><button onClick={() => props.removeRestaurants(props.restaurant)}>delete</button></td>
+      <td><button onClick={() => props.onRemove()}>delete</button></td>
     </tr>
     
   );

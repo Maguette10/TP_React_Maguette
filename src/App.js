@@ -39,33 +39,28 @@ class App extends Component {
     }
   }
   
-  removeRestaurants(restaurant) {
-	const oldRestaurants = this.state.restaurants.filter(
-      (elem, index) => {
+  // removeRestaurants(restaurant) {
+	// const oldRestaurants = this.state.restaurants.filter(
+  //     (elem, index) => {
 
-        return (elem !== restaurant) ? elem : null;
-      }
-    );	
+  //       return (elem !== restaurant) ? elem : null;
+  //     }
+  //   );	
 		
-		this.setState({
-			restaurants: oldRestaurants
-		});
-	}
+	// 	this.setState({
+	// 		restaurants: oldRestaurants
+	// 	});
+	// }
   getDataFromServer() {
     console.log("--- GETTING DATA ---");
      fetch('http://localhost:8080/api/restaurants')
      .then(response => {
        return response.json() // transforme le json texte en objet js
      })
-     .then(data => { // data c'est le texte json de response ci-dessus
-       let restaurants = [];
-       data.forEach((el) => {
-    
-         restaurants.push(el.addRestaurants);
-       });
-
+     .then(response => { // data c'est le texte json de response ci-dessus
+      console.log(response.data);
        this.setState({
-        restaurants: restaurants
+        restaurants: response.data
       });
        
      }).catch(err => {
@@ -73,6 +68,20 @@ class App extends Component {
      });
 
   }
+
+  removeRestaurant = (id,index) => {
+    let url = "/api/restaurants/" + id;
+
+    fetch(url, {
+        method: "DELETE",
+    })
+    .then((responseJSON) => {
+      this.getDataFromServer();
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+}
 
   componentWillMount() {
     console.log("Component will mount");
@@ -84,8 +93,8 @@ class App extends Component {
   render() {
     console.log("render");
     let listAvecComponent = 
-				this.state.restaurants.map((el) => {
-				return <Restaurant restaurant={el} key={el} removeRestaurants={this.removeRestaurants.bind(this)}/>
+				this.state.restaurants.map((el, index) => {
+				return <Restaurant key={index} restaurant={el} onRemove={() => this.removeRestaurant(el._id, index)}/>
         //return <li onClick={() => this.removeRestaurants(el)} key={el}>{el}</li>
 			}
     );
@@ -103,9 +112,12 @@ class App extends Component {
         <p style={{color: (this.state.restaurants.length < 5) ? 'green' : 'red'}}>
             Nombre de restaurants : {this.state.restaurants.length}
         </p>
-        <ul>
-          {listAvecComponent}
-        </ul>
+        <table>
+        <tbody>
+{listAvecComponent}
+        </tbody>
+          
+        </table>
       </div>
     );
   }

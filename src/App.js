@@ -70,7 +70,7 @@ class App extends Component {
   }
 
   removeRestaurant = (id,index) => {
-    let url = "/api/restaurants/" + id;
+    let url = "http://localhost:8080/api/restaurants/" + id;
 
     fetch(url, {
         method: "DELETE",
@@ -112,9 +112,16 @@ class App extends Component {
         <p style={{color: (this.state.restaurants.length < 5) ? 'green' : 'red'}}>
             Nombre de restaurants : {this.state.restaurants.length}
         </p>
-        <table>
+        <table className="table">
+        <thead>
+            <tr>
+              <th scope="col">Nom</th>
+              <th scope="col">Cuisine</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
         <tbody>
-{listAvecComponent}
+            {listAvecComponent}
         </tbody>
           
         </table>
